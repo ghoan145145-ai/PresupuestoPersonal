@@ -54,7 +54,7 @@ app.config['SECRET_KEY'] = (
     'clave_secreta'
 )
 
-# BASE DE DATOS SQLITE
+#BASE DE DATOS SQLITE
 #app.config['SQLALCHEMY_DATABASE_URI'] = \
 #    'sqlite:///presupuesto.db'
 
