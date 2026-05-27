@@ -19,6 +19,6 @@ class Usuario(UserMixin, db.Model):
     )
     #CAMPO PASSWORD
     password = db.Column(
-        db.String(100),
-        nullable=False
+    db.String(500),
+    nullable=False
     )
