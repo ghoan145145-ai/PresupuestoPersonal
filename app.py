@@ -55,8 +55,16 @@ app.config['SECRET_KEY'] = (
 )
 
 # BASE DE DATOS SQLITE
-app.config['SQLALCHEMY_DATABASE_URI'] = \
+#app.config['SQLALCHEMY_DATABASE_URI'] = \
+#    'sqlite:///presupuesto.db'
+
+#Render usa PostgreSQL y  PC usa SQLite
+import os
+
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv(
+    'DATABASE_URL',
     'sqlite:///presupuesto.db'
+)
 
 # DESACTIVAR TRACKING
 app.config[
