@@ -19,6 +19,7 @@ fonttools==4.62.0
 fsspec==2026.4.0
 greenlet==3.5.1
 gunicorn==26.0.0
+psycopg2-binary==2.9.10
 gymnasium==1.2.3
 ipykernel==7.2.0
 ipython==9.11.0
