@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <!-- Configuración de caracteres -->
+    <meta charset="UTF-8">
+    <!-- Hace que el diseño sea responsive -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Título de la pestaña -->
+    <title>Calculadora</title>
+    <!-- Importa Bootstrap desde CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        /* =========================
+           ESTILOS GENERALES
+        ========================= */
+        body {
+            background: #f4f4f4;
+        }
+
+        /* =========================
+           CONTENEDOR CALCULADORA
+        ========================= */
+        .calculadora {
+            max-width: 400px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0px 0px 15px rgba(0,0,0,0.2);
+        }
+
+        /* =========================
+           DISPLAY
+        ========================= */
+        #display {
+            height: 70px;
+            font-size: 2rem;
+            text-align: right;
+        }
+
+        /* =========================
+           BOTONES
+        ========================= */
+        .btn-calc {
+            height: 70px;
+            font-size: 1.5rem;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<!-- =========================
+     NAVBAR
+========================= -->    
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
+    <div class="container-fluid">
+        <!-- Título -->
+        <a class="navbar-brand" href="/">
+            CALCULADORA
+        </a>
+
+        <!-- Botón menú responsive -->
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+        >
+
+            <span class="navbar-toggler-icon"></span>
+
+        </button>
+        <!-- Menú de navegación -->
+        <div
+            class="collapse navbar-collapse"
+            id="navbarNav"
+        >
+
+            <div class="navbar-nav ms-auto">
+
+                <a class="nav-link" href="/">
+                    Inicio
+                </a>
+
+                <a class="nav-link" href="/dashboard">
+                    Dashboard
+                </a>
+
+                <a class="nav-link" href="/calculadora">
+                    Calculadora
+                </a>
+
+                <a class="nav-link" href="/historial">
+                    Historial
+                </a>
+
+                <a class="nav-link" href="/logout">
+                    Cerrar Sesión
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</nav>
+
+<!-- =========================
+     CONTENIDO PRINCIPAL
+========================= -->
+<div class="container mt-5">
+    <!--contenido calculadora-->
+    <div class="calculadora container">
+        <!--pantalla donde se muestran operaciones-->
+        <input
+            type="text"
+            id="display"
+            class="form-control mb-3"
+            readonly
+        >
+        <!-- Contenedor de botones -->
+        <div class="row g-2">
+            <!-- Fila de botones numéricos y operadores -->
+            <div class="col-3">
+                <button class="btn btn-secondary w-100 btn-calc" onclick="agregar('7')">7</button>
+            </div>
+
+            <div class="col-3">
+                <button class="btn btn-secondary w-100 btn-calc" onclick="agregar('8')">8</button>
+            </div>
+
+            <div class="col-3">
+                <button class="btn btn-secondary w-100 btn-calc" onclick="agregar('9')">9</button>
+            </div>
+
+            <div class="col-3">
+                <button class="btn btn-warning w-100 btn-calc" onclick="agregar('/')">÷</button>
+            </div>
+
+            <div class="col-3">
+                <button class="btn btn-secondary w-100 btn-calc" onclick="agregar('4')">4</button>
+            </div>
+
+            <div class="col-3">
+                <button class="btn btn-secondary w-100 btn-calc" onclick="agregar('5')">5</button>
+            </div>
+
+            <div class="col-3">
+                <button class="btn btn-secondary w-100 btn-calc" onclick="agregar('6')">6</button>
+            </div>
+
+            <div class="col-3">
+                <button class="btn btn-warning w-100 btn-calc" onclick="agregar('*')">×</button>
+            </div>
+
+            <div class="col-3">
+                <button class="btn btn-secondary w-100 btn-calc" onclick="agregar('1')">1</button>
+            </div>
+
+            <div class="col-3">
+                <button class="btn btn-secondary w-100 btn-calc" onclick="agregar('2')">2</button>
+            </div>
+
+            <div class="col-3">
+                <button class="btn btn-secondary w-100 btn-calc" onclick="agregar('3')">3</button>
+            </div>
+
+            <div class="col-3">
+                <button class="btn btn-warning w-100 btn-calc" onclick="agregar('-')">-</button>
+            </div>
+
+            <div class="col-3">
+                <button class="btn btn-danger w-100 btn-calc" onclick="limpiar()">C</button>
+            </div>
+
+            <div class="col-3">
+                <button class="btn btn-secondary w-100 btn-calc" onclick="agregar('0')">0</button>
+            </div>
+
+            <div class="col-3">
+                <button class="btn btn-success w-100 btn-calc" onclick="calcular()">=</button>
+            </div>
+
+            <div class="col-3">
+                <button class="btn btn-warning w-100 btn-calc" onclick="agregar('+')">+</button>
+            </div>
+
+        </div>
+
+        <!--Formulario para enviar cálculos al backend -->
+        <form
+            method="POST"
+            id="formCalculo"
+            style="display:none;"
+        >
+            <!-- Guarda expresión matemática -->
+            <input
+                type="hidden"
+                name="expresion"
+                id="expresionInput"
+            >
+            <!-- Guarda resultado -->
+            <input
+                type="hidden"
+                name="resultado"
+                id="resultadoInput"
+            >
+
+        </form>
+
+    </div>
+
+    <!-- =========================
+         HISTORIAL
+    ========================= -->
+    <div class="mt-5">
+
+        <h3 class="text-center mb-4">
+            Historial de Cálculos
+        </h3>
+
+        <div class="card p-3">
+            <!-- Recorre cálculos enviados desde Flask -->
+            {% for calculo in calculos %}
+
+                <div class="border-bottom p-2">
+
+                    <strong>
+                        {{ calculo.expresion }}
+                    </strong>
+
+                    =
+                     <!-- Resultado -->
+                    {{ calculo.resultado }}
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- =========================
+     JAVASCRIPT
+========================= -->
+<script>
+// Obtiene el display de la calculadora
+const display = document.getElementById('display');
+
+// AGREGAR VALORES
+function agregar(valor) {
+    // Agrega números u operadores al display
+    display.value += valor;
+
+}
+
+// LIMPIAR DISPLAY
+function limpiar() {
+    display.value = '';
+}
+
+// PARA CALCULAR RESULTADO
+function calcular() {
+
+    try {
+        // Obtiene expresión actual
+        let expresion = display.value;
+        // ELIMINA 0 INNECESARIOS
+        expresion = expresion.replace(/\b0+(\d+)/g, '$1');
+        // Evalúa operación matemática
+        let resultado = eval(expresion);
+        
+        // Muestra resultado en pantalla
+        display.value = resultado;
+        // GUARDA EXPRESION EN IMPUT OCULTO
+        document.getElementById(
+            'expresionInput'
+        ).value = expresion;
+        // GUARDA RESULTADO EN IMPUT OCULTO
+        document.getElementById(
+            'resultadoInput'
+        ).value = resultado;
+        //ENVIAR FORMULARIO AUTOMARICAMENTE
+        document.getElementById(
+            'formCalculo'
+        ).submit();
+
+    }
+    //SI OCURRE ERORR, MENSAJE
+    catch {
+
+        alert('Operación inválida');
+
+    }
+
+}
+
+</script>
+<!-- Importa JavaScript de Bootstrap -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

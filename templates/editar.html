@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <!-- Configuración de caracteres -->
+    <meta charset="UTF-8">
+
+    <!-- Hace responsive la página -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Título de la pestaña -->
+    <title>Editar Movimiento</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+
+<!-- Fondo claro -->
+<body class="bg-light">
+
+<!-- =========================
+     CONTENEDOR PRINCIPAL
+========================= -->
+
+<div class="container mt-5">
+
+    <!-- Centra contenido -->
+    <div class="row justify-content-center">
+
+        <!-- Columna principal -->
+        <div class="col-md-6">
+
+            <!-- Tarjeta del formulario -->
+            <div class="card shadow p-4">
+
+                <!-- Título -->
+                <h2 class="text-center mb-4">
+                    Editar Movimiento
+                </h2>
+
+                <!-- =========================
+                     FORMULARIO
+                ========================= -->
+
+                <form method="POST">
+
+                    <!-- =========================
+                         TIPO
+                    ========================= -->
+
+                    <label class="form-label">
+                        Tipo
+                    </label>
+
+                    <select
+                        name="tipo"
+                        id="tipo"
+                        class="form-select mb-3"
+
+                        
+                        onchange="actualizarCategorias()"
+                    >
+
+                        <!-- Opción ingreso -->
+                        <option
+                            value="Ingreso"
+
+                            
+                            {% if movimiento.tipo == 'Ingreso' %}selected{% endif %}
+                        >
+                            Ingreso
+                        </option>
+
+                        <!-- Opción gasto -->
+                        <option
+                            value="Gasto"
+
+                            
+                            {% if movimiento.tipo == 'Gasto' %}selected{% endif %}
+                        >
+                            Gasto
+                        </option>
+
+                    </select>
+
+                    <!-- =========================
+                         DESCRIPCIÓN
+                    ========================= -->
+
+                    <label class="form-label">
+                        Descripción
+                    </label>
+
+                    <input
+                        type="text"
+                        name="descripcion"
+                        class="form-control mb-3"
+
+                        
+                        value="{{ movimiento.descripcion }}"
+
+                        required
+                    >
+
+                    <!-- =========================
+                         VALOR
+                    ========================= -->
+
+                    <label class="form-label">
+                        Valor
+                    </label>
+
+                    <input
+                        type="number"
+                        name="valor"
+                        class="form-control mb-3"
+
+                        
+                        value="{{ movimiento.valor }}"
+
+                        required
+                    >
+
+                    <!-- =========================
+                         FECHA
+                    ========================= -->
+
+                    <label class="form-label">
+                        Fecha
+                    </label>
+
+                    <input
+                        type="date"
+                        name="fecha"
+                        class="form-control mb-3"
+
+                        
+                        value="{{ movimiento.fecha }}"
+
+                        required
+                    >
+
+                    <!-- =========================
+                         CATEGORÍA
+                    ========================= -->
+
+                    <label class="form-label">
+                        Categoría
+                    </label>
+
+                    <!-- Select vacío que se llena con JavaScript -->
+                    <select
+                        name="categoria"
+                        id="categoria"
+                        class="form-select mb-3"
+                    >
+                    </select>
+
+                    <!-- =========================
+                         MÉTODO DE PAGO
+                    ========================= -->
+
+                    <label class="form-label">
+                        Método de Pago
+                    </label>
+
+                    <select
+                        name="metodo_pago"
+                        class="form-select mb-4"
+                    >
+
+                        <!-- Efectivo -->
+                        <option
+                            value="Efectivo"
+
+                            {% if movimiento.metodo_pago == 'Efectivo' %}selected{% endif %}
+                        >
+                            Efectivo
+                        </option>
+
+                        <!-- Tarjeta -->
+                        <option
+                            value="Tarjeta"
+
+                            {% if movimiento.metodo_pago == 'Tarjeta' %}selected{% endif %}
+                        >
+                            Tarjeta
+                        </option>
+
+                        <!-- Nequi -->
+                        <option
+                            value="Nequi"
+
+                            {% if movimiento.metodo_pago == 'Nequi' %}selected{% endif %}
+                        >
+                            Nequi
+                        </option>
+
+                        <!-- Daviplata -->
+                        <option
+                            value="Daviplata"
+
+                            {% if movimiento.metodo_pago == 'Daviplata' %}selected{% endif %}
+                        >
+                            Daviplata
+                        </option>
+
+                    </select>
+
+                    <!-- =========================
+                         BOTONES
+                    ========================= -->
+
+                    <!-- Botón guardar -->
+                    <button
+                        type="submit"
+                        class="btn btn-success w-100"
+                    >
+                        Guardar Cambios
+                    </button>
+
+                    <!-- Botón volver -->
+                    <a
+                        href="/historial"
+                        class="btn btn-dark w-100 mt-3"
+                    >
+                        Volver
+                    </a>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- =========================
+     JAVASCRIPT
+========================= -->
+
+<script>
+
+/* =========================
+   ACTUALIZAR CATEGORÍAS
+========================= */
+
+function actualizarCategorias() {
+
+    /* Obtiene tipo seleccionado */
+    const tipo = document.getElementById('tipo').value;
+
+    /* Obtiene select categoría */
+    const categoria = document.getElementById('categoria');
+
+    /* Limpia categorías anteriores */
+    categoria.innerHTML = '';
+
+    /* Lista de opciones */
+    let opciones = [];
+
+    /* =========================
+       CATEGORÍAS INGRESOS
+    ========================= */
+
+    if (tipo === 'Ingreso') {
+
+        opciones = [
+            'Salario',
+            'Freelance',
+            'Ventas',
+            'Inversiones',
+            'Bonos',
+            'Otros'
+        ];
+
+    }
+
+    /* =========================
+       CATEGORÍAS GASTOS
+    ========================= */
+
+    else {
+
+        opciones = [
+            'Comida',
+            'Transporte',
+            'Estudio',
+            'Salud',
+            'Ocio',
+            'Servicios',
+            'Ahorro'
+        ];
+
+    }
+
+    /* =========================
+       CREAR OPCIONES
+    ========================= */
+
+    opciones.forEach(opcion => {
+
+        /* Crea opción HTML */
+        let option = document.createElement('option');
+
+        /* Asigna valor */
+        option.value = opcion;
+
+        /* Texto visible */
+        option.text = opcion;
+
+        /* Marca seleccionada la categoría actual */
+        if (opcion === "{{ movimiento.categoria }}") {
+
+            option.selected = true;
+
+        }
+
+        /* Agrega opción al select */
+        categoria.appendChild(option);
+
+    });
+
+}
+
+/* Ejecuta función al cargar página */
+actualizarCategorias();
+
+</script>
+
+</body>
+
+</html>

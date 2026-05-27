@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Configuración general -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Título -->
+    <title>Calculadora de Presupuesto</title>
+
+    <!-- CSS personalizado -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<!-- =========================
+     NAVBAR
+========================= -->
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
+    <div class="container-fluid">
+
+        <a class="navbar-brand" href="/">
+            Bienvenidos
+        </a>
+
+        <!-- Botón responsive -->
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+        >
+
+            <span class="navbar-toggler-icon"></span>
+
+        </button>
+
+        <!-- Menú -->
+        <div
+            class="collapse navbar-collapse"
+            id="navbarNav"
+        >
+
+            <div class="navbar-nav ms-auto">
+
+                <a class="nav-link" href="/">Inicio</a>
+
+                <a class="nav-link" href="/dashboard">
+                    Dashboard
+                </a>
+
+                <a class="nav-link" href="/calculadora">
+                    Calculadora
+                </a>
+
+                <a class="nav-link" href="/historial">
+                    Historial
+                </a>
+
+                <a class="nav-link" href="/logout">
+                    Cerrar Sesión
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</nav>
+
+<!-- =========================
+     CONTENEDOR PRINCIPAL
+========================= -->
+
+<div class="contenedor shadow">
+
+    <h1>Calculadora de Presupuesto</h1>
+
+    <!-- Tarjetas resumen -->
+    <div class="row mt-4 mb-4">
+
+        <!-- Ingresos -->
+        <div class="col">
+
+            <div class="card text-center bg-success text-white">
+
+                <div class="card-body">
+
+                    <h5>Ingresos</h5>
+
+                    <h3>${{ total_ingresos }}</h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Gastos -->
+        <div class="col">
+
+            <div class="card text-center bg-danger text-white">
+
+                <div class="card-body">
+
+                    <h5>Gastos</h5>
+
+                    <h3>${{ total_gastos }}</h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Saldo disponible -->
+    <h2>Saldo Disponible</h2>
+
+    <div class="saldo fw-bold {% if saldo < 0 %}negativo{% endif %}">
+        ${{ saldo }}
+    </div>
+
+    <!-- =========================
+         FORMULARIO
+    ========================= -->
+
+    <form method="POST">
+
+        <!-- Tipo de movimiento -->
+        <label class="form-label fw-bold mt-3">
+            Tipo de Movimiento
+        </label>
+
+        <select name="tipo" id="tipo" class="form-select">
+
+            <option>Ingreso</option>
+            <option>Gasto</option>
+
+        </select>
+
+        <!-- Categoría dinámica -->
+        <label class="form-label fw-bold mt-3">
+            Categoría
+        </label>
+
+        <select
+            name="categoria"
+            id="categoria"
+            class="form-select"
+        >
+        </select>
+
+        <!-- Método de pago -->
+        <label class="form-label fw-bold mt-3">
+            Método de Pago
+        </label>
+
+        <select
+            name="metodo_pago"
+            class="form-select"
+        >
+
+            <option>Efectivo</option>
+            <option>Tarjeta</option>
+            <option>Nequi</option>
+            <option>Daviplata</option>
+
+        </select>
+
+        <!-- Fecha -->
+        <label class="form-label fw-bold mt-3">
+            Fecha
+        </label>
+
+        <input
+            type="date"
+            name="fecha_manual"
+            class="form-control"
+            required
+        >
+
+        <!-- Descripción -->
+        <input
+            type="text"
+            class="form-control"
+            name="descripcion"
+            placeholder="Descripción"
+            required
+        >
+
+        <!-- Valor -->
+        <input
+            type="number"
+            min="1"
+            class="form-control"
+            name="valor"
+            placeholder="Valor"
+            required
+        >
+
+        <!-- Botón guardar -->
+        <button
+            type="submit"
+            class="btn btn-success"
+        >
+            Guardar Movimiento
+        </button>
+
+    </form>
+
+    <!-- =========================
+         LISTA DE MOVIMIENTOS
+    ========================= -->
+
+    <h2>Movimientos</h2>
+
+    <ul>
+
+        {% for movimiento in movimientos %}
+
+            <li class="{{ movimiento.tipo }}">
+
+                <!-- Información -->
+                <div>
+
+                    <strong>
+                        {{ movimiento.tipo }}
+                    </strong>
+
+                    <br>
+
+                    {{ movimiento.descripcion }}
+
+                    <br>
+
+                    <small>{{ movimiento.fecha }}</small>
+
+                    <br>
+
+                    <small>
+                        Categoría:
+                        {{ movimiento.categoria }}
+                    </small>
+
+                    <br>
+
+                    <small>
+                        Método:
+                        {{ movimiento.metodo_pago }}
+                    </small>
+
+                </div>
+
+                <!-- Valor -->
+                <div>
+
+                    ${{ movimiento.valor }}
+
+                </div>
+
+            </li>
+
+        {% endfor %}
+
+    </ul>
+
+</div>
+
+<!-- =========================
+     JAVASCRIPT
+========================= -->
+
+<script>
+
+/* Elementos del formulario */
+const tipo = document.getElementById('tipo');
+const categoria = document.getElementById('categoria');
+
+/* Categorías de gastos */
+const categoriasGastos = [
+
+    'Comida',
+    'Transporte',
+    'Estudio',
+    'Salud',
+    'Ocio',
+    'Servicios',
+    'Ahorro'
+
+];
+
+/* Categorías de ingresos */
+const categoriasIngresos = [
+
+    'Salario',
+    'Freelance',
+    'Ventas',
+    'Inversiones',
+    'Bonos',
+    'Otros'
+
+];
+
+/* Actualiza categorías dinámicamente */
+function actualizarCategorias() {
+
+    categoria.innerHTML = '';
+
+    let lista = [];
+
+    if (tipo.value === 'Ingreso') {
+
+        lista = categoriasIngresos;
+
+    } else {
+
+        lista = categoriasGastos;
+
+    }
+
+    /* Genera opciones */
+    lista.forEach(function(item) {
+
+        const opcion = document.createElement('option');
+
+        opcion.value = item;
+
+        opcion.textContent = item;
+
+        categoria.appendChild(opcion);
+
+    });
+
+}
+
+/* Detecta cambios */
+tipo.addEventListener(
+    'change',
+    actualizarCategorias
+);
+
+/* Ejecuta al iniciar */
+actualizarCategorias();
+
+</script>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

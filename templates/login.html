@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <!-- Configuración general -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Título -->
+    <title>Login</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+
+<body class="bg-dark">
+
+<div class="container mt-5">
+
+    <!-- Mensaje de éxito -->
+    {% if mensaje_exito %}
+
+    <div class="alert alert-success">
+
+        {{ mensaje_exito }}
+
+    </div>
+
+    {% endif %}
+
+<div class="container mt-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-md-5">
+
+            <!-- Tarjeta login -->
+            <div class="card shadow p-4">
+
+                <h2 class="text-center mb-4">
+                    Iniciar Sesión
+                </h2>
+
+                <!-- Mensaje de error -->
+                {% if mensaje_error %}
+
+                <div class="alert alert-danger">
+
+                    {{ mensaje_error }}
+
+                </div>
+
+                {% endif %}
+
+                <!-- Formulario -->
+                <form method="POST">
+
+                    <!-- Usuario -->
+                    <label class="form-label">
+                        Usuario
+                    </label>
+
+                    <input
+                        type="text"
+                        name="usuario"
+                        class="form-control mb-3 text-uppercase"
+                        style="text-transform: uppercase;"
+                        required
+                    >
+
+                    <!-- Contraseña -->
+                    <label class="form-label">
+                        Contraseña
+                    </label>
+
+                    <input
+                        type="password"
+                        name="password"
+                        class="form-control mb-4"
+                        required
+                    >
+
+                    <!-- Botón ingresar -->
+                    <button
+                        type="submit"
+                        class="btn btn-primary w-100"
+                    >
+                        Ingresar
+                    </button>
+
+                </form>
+
+                <!-- Botón registro -->
+                <a
+                    href="/registro"
+                    class="btn btn-dark mt-3"
+                >
+                    Crear Cuenta
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

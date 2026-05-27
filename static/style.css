@@ -1,0 +1,148 @@
+/* =========================
+   ESTILOS GENERALES
+========================= */
+
+/* config tipo de letra y fondo gris claro*/
+body{
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+}
+
+
+/* =========================
+   CONTENEDOR PRINCIPAL
+========================= */
+.contenedor{
+    width: 500px;
+    margin: 50px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+/* =========================
+   SALDO ESTILO
+========================= */
+.saldo{
+    font-size: 40px;
+    color: green;
+    margin-bottom: 30px;
+}
+
+/* =========================
+   FORMULARIOS
+========================= */
+form{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* =========================
+   INPUTS Y SELECT
+========================= */
+input, select{
+    padding: 10px;
+    font-size: 16px;
+}
+
+/* =========================
+   BOTONES
+========================= */
+button{
+    padding: 12px;
+    background-color: green;
+    color: white;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover{
+    background-color: darkgreen;
+}
+
+/* =========================
+   CONFIGURACION DE LISTAS
+========================= */
+ul{
+    /* Elimina viñetas y padding */
+    list-style: none;
+    padding: 0;
+}
+
+/* Elementos de la lista */
+li{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    margin-top: 10px;
+    border-radius: 8px;
+}
+
+/* =========================
+   MOVIMIENTOS
+========================= */
+.Ingreso{
+    background-color: #d4edda;
+}
+
+.Gasto{
+    background-color: #f8d7da;
+}
+
+/* =========================
+   ENLACES
+========================= */
+a{
+    text-decoration: none;
+    margin-left: 10px;
+}
+
+/* =========================
+   TEXTO NEGATIVO
+========================= */
+.negativo{
+    color: red;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 768px) {
+
+    h1 {
+        font-size: 28px;
+    }
+
+    .contenedor {
+        width: 95%;
+        padding: 20px;
+    }
+
+    .saldo {
+        font-size: 30px;
+    }
+
+    .calculadora {
+        width: 100%;
+    }
+
+    .botones-calculadora button {
+        height: 60px;
+        font-size: 20px;
+    }
+
+    canvas {
+        max-width: 100% !important;
+        height: auto !important;
+    }
+
+    table {
+        font-size: 14px;
+    }
+
+}

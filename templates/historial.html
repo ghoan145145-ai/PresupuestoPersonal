@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <!-- Configuración de caracteres -->
+    <meta charset="UTF-8">
+
+    <!-- Hace responsive la página -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Título de la página -->
+    <title>Historial</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+
+<!-- Fondo claro -->
+<body class="bg-light">
+
+<!-- =========================
+     NAVBAR
+========================= -->
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
+    <div class="container-fluid">
+
+        <!-- Nombre del módulo -->
+        <a class="navbar-brand" href="/">
+            HISTORIAL
+        </a>
+
+        <!-- Botón responsive -->
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+        >
+
+            <span class="navbar-toggler-icon"></span>
+
+        </button>
+
+        <!-- Menú de navegación -->
+        <div
+            class="collapse navbar-collapse"
+            id="navbarNav"
+        >
+
+            <div class="navbar-nav ms-auto">
+
+                <a class="nav-link" href="/">
+                    Inicio
+                </a>
+
+                <a class="nav-link" href="/dashboard">
+                    Dashboard
+                </a>
+
+                <a class="nav-link" href="/calculadora">
+                    Calculadora
+                </a>
+
+                <a class="nav-link" href="/historial">
+                    Historial
+                </a>
+
+                <a class="nav-link" href="/logout">
+                    Cerrar Sesión
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</nav>
+
+<!-- =========================
+     CONTENIDO PRINCIPAL
+========================= -->
+
+<div class="container mt-5">
+
+    <!-- Tarjeta principal -->
+    <div class="card shadow p-4">
+
+        <!-- Título -->
+        <h1 class="text-center mb-4">
+            Historial de Movimientos
+        </h1>
+
+        <!-- =========================
+             FORMULARIO DE FILTROS
+        ========================= -->
+
+        <form method="GET" class="row g-3 mb-4">
+
+            <!-- FILTRO TIPO -->
+            <div class="col-md-2">
+
+                <select
+                    name="tipo"
+                    class="form-select"
+                >
+
+                    <option value="">
+                        Tipo
+                    </option>
+
+                    <option value="Ingreso">
+                        Ingreso
+                    </option>
+
+                    <option value="Gasto">
+                        Gasto
+                    </option>
+
+                </select>
+
+            </div>
+
+            <!-- FILTRO CATEGORÍA -->
+            <div class="col-md-2">
+
+                <select
+                    name="categoria"
+                    id="categoriaFiltro"
+                    class="form-select"
+                >
+
+                    <option value="">
+                        Categoría
+                    </option>
+
+                </select>
+
+            </div>
+
+            <!-- FILTRO MÉTODO DE PAGO -->
+            <div class="col-md-2">
+
+                <select
+                    name="metodo_pago"
+                    class="form-select"
+                >
+
+                    <option value="">
+                        Método
+                    </option>
+
+                    <option value="Efectivo">
+                        Efectivo
+                    </option>
+
+                    <option value="Nequi">
+                        Nequi
+                    </option>
+
+                    <option value="Daviplata">
+                        Daviplata
+                    </option>
+
+                    <option value="Tarjeta">
+                        Tarjeta
+                    </option>
+
+                </select>
+
+            </div>
+
+            <!-- FILTRO FECHA INICIO -->
+            <div class="col-md-2">
+
+                <input
+                    type="date"
+                    name="fecha_inicio"
+                    class="form-control"
+                >
+
+            </div>
+
+            <!-- FILTRO FECHA FIN -->
+            <div class="col-md-2">
+
+                <input
+                    type="date"
+                    name="fecha_fin"
+                    class="form-control"
+                >
+
+            </div>
+
+            <!-- BOTONES -->
+            <div class="d-flex gap-2">
+
+                <!-- Botón filtrar -->
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    Filtrar
+                </button>
+
+                <!-- Botón limpiar -->
+                <a
+                    href="{{ url_for('historial.historial') }}"
+                    class="btn btn-secondary"
+                >
+                    Limpiar
+                </a>
+
+            </div>
+
+        </form>
+
+        <!-- =========================
+             FILTROS ACTIVOS
+        ========================= -->
+
+        {% if request.args %}
+
+        <div class="alert alert-info">
+
+            <strong>
+                Filtros activos:
+            </strong>
+
+            <!-- Tipo -->
+            {% if request.args.get('tipo') %}
+                Tipo: {{ request.args.get('tipo') }}
+                |
+            {% endif %}
+
+            <!-- Categoría -->
+            {% if request.args.get('categoria') %}
+                Categoría: {{ request.args.get('categoria') }}
+                |
+            {% endif %}
+
+            <!-- Método -->
+            {% if request.args.get('metodo_pago') %}
+                Método: {{ request.args.get('metodo_pago') }}
+                |
+            {% endif %}
+
+            <!-- Fecha inicio -->
+            {% if request.args.get('fecha_inicio') %}
+                Desde: {{ request.args.get('fecha_inicio') }}
+                |
+            {% endif %}
+
+            <!-- Fecha fin -->
+            {% if request.args.get('fecha_fin') %}
+                Hasta: {{ request.args.get('fecha_fin') }}
+                |
+            {% endif %}
+
+        </div>
+
+        {% endif %}
+
+        <!-- =========================
+             EXPORTAR EXCEL
+        ========================= -->
+
+        <a href="/exportar_excel" class="btn btn-success mb-3">
+            Exportar a Excel
+        </a>
+
+        <!-- =========================
+             TABLA RESPONSIVE
+        ========================= -->
+
+        <div class="table-responsive">
+
+            <table class="table table-bordered table-hover align-middle">
+
+                <!-- CABECERA -->
+                <thead class="table-dark">
+
+                    <tr>
+
+                        <th>Tipo</th>
+                        <th>Descripción</th>
+                        <th>Valor</th>
+                        <th>Fecha</th>
+                        <th>Categoría</th>
+                        <th>Método</th>
+                        <th>Acciones</th>
+
+                    </tr>
+
+                </thead>
+
+                <!-- CUERPO -->
+                <tbody>
+
+                    <!-- Recorre movimientos -->
+                    {% for movimiento in movimientos.items %}
+
+                    <tr>
+
+                        <!-- Tipo -->
+                        <td>
+
+                            <!-- Si es ingreso -->
+                            {% if movimiento.tipo == 'Ingreso' %}
+
+                                <span class="badge bg-success">
+                                    {{ movimiento.tipo }}
+                                </span>
+
+                            <!-- Si es gasto -->
+                            {% else %}
+
+                                <span class="badge bg-danger">
+                                    {{ movimiento.tipo }}
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <!-- Descripción -->
+                        <td>
+                            {{ movimiento.descripcion }}
+                        </td>
+
+                        <!-- Valor -->
+                        <td>
+                            ${{ movimiento.valor }}
+                        </td>
+
+                        <!-- Fecha -->
+                        <td>
+                            {{ movimiento.fecha }}
+                        </td>
+
+                        <!-- Categoría -->
+                        <td>
+                            {{ movimiento.categoria }}
+                        </td>
+
+                        <!-- Método -->
+                        <td>
+                            {{ movimiento.metodo_pago }}
+                        </td>
+
+                        <!-- Acciones -->
+                        <td>
+
+                            <!-- Editar -->
+                            <a
+                                href="/editar/{{ movimiento.id }}"
+                                class="btn btn-warning btn-sm"
+                            >
+                                ✏️ Editar
+                            </a>
+
+                            <!-- Eliminar -->
+                            <a
+                                href="/eliminar/{{ movimiento.id }}/historial"
+                                class="btn btn-danger btn-sm"
+                            >
+                                ❌ Eliminar
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            <!-- =========================
+                 PAGINACIÓN
+            ========================= -->
+
+            <nav class="mt-4">
+
+                <ul class="pagination justify-content-center">
+
+                    <!-- BOTÓN ANTERIOR -->
+                    {% if movimientos.has_prev %}
+
+                    <li class="page-item">
+
+                        <a
+                            class="page-link"
+
+                            href="{{ url_for(
+                                'historial.historial',
+                                pagina=movimientos.prev_num,
+                                tipo=request.args.get('tipo'),
+                                categoria=request.args.get('categoria'),
+                                metodo_pago=request.args.get('metodo_pago'),
+                                fecha_inicio=request.args.get('fecha_inicio'),
+                                fecha_fin=request.args.get('fecha_fin')
+                            ) }}"
+                        >
+                            Anterior
+                        </a>
+
+                    </li>
+
+                    {% endif %}
+
+                    <!-- NÚMEROS DE PÁGINA -->
+                    {% for pagina in movimientos.iter_pages() %}
+
+                        {% if pagina %}
+
+                            <li class="page-item
+
+                                {% if pagina == movimientos.page %}
+                                    active
+                                {% endif %}
+                            ">
+
+                                <a
+                                    class="page-link"
+
+                                    href="{{ url_for(
+                                        'historial.historial',
+                                        pagina=pagina,
+                                        tipo=request.args.get('tipo'),
+                                        categoria=request.args.get('categoria'),
+                                        metodo_pago=request.args.get('metodo_pago'),
+                                        fecha_inicio=request.args.get('fecha_inicio'),
+                                        fecha_fin=request.args.get('fecha_fin')
+                                    ) }}"
+                                >
+                                    {{ pagina }}
+                                </a>
+
+                            </li>
+
+                        {% endif %}
+
+                    {% endfor %}
+
+                    <!-- BOTÓN SIGUIENTE -->
+                    {% if movimientos.has_next %}
+
+                    <li class="page-item">
+
+                        <a
+                            class="page-link"
+
+                            href="{{ url_for(
+                                'historial.historial',
+                                pagina=movimientos.next_num,
+                                tipo=request.args.get('tipo'),
+                                categoria=request.args.get('categoria'),
+                                metodo_pago=request.args.get('metodo_pago'),
+                                fecha_inicio=request.args.get('fecha_inicio'),
+                                fecha_fin=request.args.get('fecha_fin')
+                            ) }}"
+                        >
+                            Siguiente
+                        </a>
+
+                    </li>
+
+                    {% endif %}
+
+                </ul>
+
+            </nav>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- =========================
+     JAVASCRIPT
+========================= -->
+
+<script>
+
+/* =========================
+   FILTRO DINÁMICO
+========================= */
+
+/* Obtiene select tipo */
+const tipoFiltro = document.querySelector(
+    'select[name="tipo"]'
+);
+
+/* Obtiene select categoría */
+const categoriaFiltro = document.getElementById(
+    'categoriaFiltro'
+);
+
+/* Categorías de gastos */
+const categoriasGastos = [
+
+    'Comida',
+    'Transporte',
+    'Estudio',
+    'Salud',
+    'Ocio',
+    'Servicios',
+    'Ahorro'
+
+];
+
+/* Categorías de ingresos */
+const categoriasIngresos = [
+
+    'Salario',
+    'Freelance',
+    'Ventas',
+    'Inversiones',
+    'Bonos',
+    'Otros'
+
+];
+
+/* Función actualizar categorías */
+function actualizarCategorias() {
+
+    /* Reinicia select */
+    categoriaFiltro.innerHTML =
+        '<option value="">Categoría</option>';
+
+    let categorias = [];
+
+    /* Si es ingreso */
+    if (tipoFiltro.value === 'Ingreso') {
+
+        categorias = categoriasIngresos;
+
+    }
+
+    /* Si es gasto */
+    else if (tipoFiltro.value === 'Gasto') {
+
+        categorias = categoriasGastos;
+
+    }
+
+    /* Agrega opciones */
+    categorias.forEach(categoria => {
+
+        categoriaFiltro.innerHTML += `
+            <option value="${categoria}">
+                ${categoria}
+            </option>
+        `;
+
+    });
+
+}
+
+/* Detecta cambios */
+tipoFiltro.addEventListener(
+    'change',
+    actualizarCategorias
+);
+
+</script>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>
